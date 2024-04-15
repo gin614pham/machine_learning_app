@@ -4,6 +4,7 @@ import pandas as pd
 class Dataset:
 
     def __init__(self, df=None, target=None, vector_x=None):
+        self.df = pd.DataFrame()
         self.df = df
         self.target = target
         self.vector_x = vector_x

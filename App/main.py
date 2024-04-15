@@ -9,6 +9,7 @@ import pandas as pd
 from model.dataset import Dataset
 from model.typeAI import typeAI
 from controller import readFile
+from controller.cleanData import CleanData
 
 
 class Main:
@@ -17,8 +18,8 @@ class Main:
         self.dataset = Dataset()
         self.root = tk.Tk()
         self.type_ai = typeAI().get_name()
-
         self.root.title("App")
+
         self.frame_input_file = tk.Frame(self.root)
         self.frame_input_file.pack(side=tk.TOP, padx=10, pady=20)
         self.button_input_file = tk.Button(
@@ -27,6 +28,11 @@ class Main:
         self.label_file_input = tk.Label(
             self.frame_input_file, text="File Name: No file selected")
         self.label_file_input.pack(side=tk.TOP, padx=10, pady=5)
+        self.button_clean_data = tk.Button(
+            self.frame_input_file, text="Clean Data", command=self.clean_data)
+        self.button_clean_data.pack(side=tk.TOP, padx=10, pady=5)
+        self.button_clean_data.configure(state=tk.DISABLED)
+
         self.label_select = tk.Label(
             self.root, text="Select Column: ")
         self.label_select.pack(side=tk.TOP, padx=10, pady=5)
@@ -90,6 +96,7 @@ class Main:
                 self.select_target.config(
                     values=self.dataset.get_list_column())
                 self.select_target.current(0)
+                self.button_clean_data.configure(state=tk.NORMAL)
                 self.load_data()
         except Exception as e:
             msg.showerror("Error", str(e))
@@ -111,6 +118,14 @@ class Main:
         for i in self.list_column_x.curselection()[::-1]:
             self.list_column_select_x.insert(tk.END, self.list_column_x.get(i))
             self.list_column_x.delete(i)
+
+    def clean_data(self):
+        clean_data = CleanData(self.dataset.df, self.root)
+        self.root.wait_window(clean_data.root)
+
+        if clean_data.dataset is not None:
+            self.dataset.df = clean_data.df
+            self.load_data()
 
     def start(self):
         print(self.select_target.get())
