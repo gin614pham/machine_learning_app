@@ -31,9 +31,24 @@ class Data:
         memory_usage_dict = {'Memory usage': memory_usage}
         for unit in ['bytes', 'KB', 'MB', 'GB', 'TB']:
             if memory_usage < 1024.0:
-                memory_usage_dict['Memory usage'] = "{:3.1f} {}".format(
+                memory_usage_dict['Memory usage'] = "{:3.1f}+ {}".format(
                     memory_usage, unit)
                 break
             else:
                 memory_usage /= 1024.0
         return pd.Series(memory_usage_dict)
+
+    def get_all_info_nan(self):
+        info_nan = {
+            "Sum NaN": [],
+            "Percent NaN": [],
+            "Dtype": []
+        }
+        sum_nan = self.df.isna().sum()
+        percent_nan = (self.df.isna().mean()*100).round(2).astype(str) + "%"
+
+        info_nan["Sum NaN"] = sum_nan
+        info_nan["Percent NaN"] = percent_nan
+        info_nan["Dtype"] = self.df.dtypes
+
+        return pd.DataFrame(info_nan)
