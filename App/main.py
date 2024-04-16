@@ -35,7 +35,7 @@ class Main:
         self.button_clean_data.configure(state=tk.DISABLED)
 
         self.label_select = tk.Label(
-            self.root, text="Select Column: ")
+            self.root, text="Select Target Column: ")
         self.label_select.pack(side=tk.TOP, padx=10, pady=5)
         self.select_target = ttk.Combobox(
             self.root, state="readonly", values=None)
