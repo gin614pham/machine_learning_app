@@ -10,6 +10,7 @@ from model.dataset import Dataset
 from model.typeAI import typeAI
 from controller import readFile
 from controller.cleanData import CleanData
+import train
 
 
 class Main:
@@ -132,6 +133,9 @@ class Main:
         print(self.list_column_x.get(0, tk.END))
         print(self.select_AI.get())
         print(self.dataset.df)
+        train.train(self.dataset.df, self.select_target.get(),
+                    list(self.list_column_x.get(0, tk.END)), self.select_AI.get())
+    
 
 
 if __name__ == "__main__":
