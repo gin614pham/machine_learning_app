@@ -53,3 +53,5 @@ class Data:
         info_nan["Dtype"] = self.df.dtypes
 
         return pd.DataFrame(info_nan)
+    def get_categorical_columns(self):
+        return [col for col in self.df.columns if self.df[col].dtype == 'object']

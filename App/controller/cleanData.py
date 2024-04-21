@@ -72,14 +72,17 @@ class CleanData:
             self.frame_button, text="Delete Duplicate", command=self.delete_duplicate)
         self.button_delete_duplicate.grid(row=2, column=1, padx=5, pady=5)
         self.button_delete_duplicate.config(state=tk.DISABLED)
+        self.button_convert_to_numeric = tk.Button(
+            self.frame_button, text="Convert to Numeric", command=self.convert_to_numeric)
+        self.button_convert_to_numeric.grid(row=3, column=0, padx=5, pady=5)
 
         self.button_save = tk.Button(
             self.frame_button, text="Save", command=self.save)
-        self.button_save.grid(row=3, column=1, padx=5, pady=5)
+        self.button_save.grid(row=4, column=1, padx=5, pady=5)
 
         self.button_ok = tk.Button(
             self.frame_button, text="OK", command=lambda: self.quit(window))
-        self.button_ok.grid(row=3, column=0, padx=5, pady=5)
+        self.button_ok.grid(row=4, column=0, padx=5, pady=5)
 
         # show table data in window
         self.show_data_info()
@@ -134,6 +137,17 @@ class CleanData:
         self.button_delete_duplicate.config(state=tk.DISABLED)
         self.show_data_info()
         self.show_data()
+    def convert_to_numeric(self):
+        columns = self.dataset.df.columns
+        for col in columns:
+            if self.dataset.df[col].dtype == 'object':
+                try:
+                    self.dataset.df[col] = self.dataset.df[col].astype('category').cat.codes
+                except ValueError:
+                    pass
+        self.show_data_info()
+        self.show_data()
+
 
     def save(self):
         # delete ".csv" in file name and add "_clean"
