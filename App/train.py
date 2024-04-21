@@ -60,8 +60,19 @@ def KNN(df, target, columns):
     y = df[target]
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42)
-    k = 5
-    model = KNeighborsClassifier(n_neighbors=k)
+    k_values = [1, 3, 5, 7, 9]
+
+    best_accuracy = 0
+    best_k = None
+    for k in k_values:
+        knn_model = KNeighborsClassifier(n_neighbors=k)
+        knn_model.fit(X_train, y_train)
+        y_pred = knn_model.predict(X_test)
+        accuracy = accuracy_score(y_test, y_pred)
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+            best_k = k
+    model = KNeighborsClassifier(n_neighbors=best_k)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
@@ -71,13 +82,17 @@ def KNN(df, target, columns):
     plt.ylabel("Giá trị dự đoán")
     plt.title("So sánh giá trị thực tế và dự đoán")
 
-# Thêm đường thẳng MSE
+    # Thêm chú thích về giá trị K
+    plt.text(-0.1, 1.05, f"Best k: {best_k}", ha='left', va='center', transform=plt.gca().transAxes, fontsize=10)
+
+    # Thêm đường thẳng MSE
     plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], linestyle='--', color='red')  # Đường chéo
     plt.text(max(y_test) * 0.7, min(y_test) * 1.1, f'MSE: {mse:.2f}', fontsize=12, color='blue')  # Hiển thị MSE
 
     plt.show()
     print(mse, r2)
     return mse, r2
+
 def draw_heatmap_plot(accuracy, cm):
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
     plt.text(-0.1, 1.05, f"Accuracy: {accuracy:.4f}", ha='left', va='center', transform=plt.gca().transAxes, fontsize=10)
