@@ -109,6 +109,13 @@ class Main:
         for column in columns:
             if column != self.select_target.get():
                 self.list_column_select_x.insert(tk.END, column)
+        # reset select_target
+
+    def load_data_after_clean(self):
+        columns = self.dataset.get_list_column()
+        self.select_target.configure(values=columns)
+        self.select_target.current(0)
+        self.load_data()
 
     def join_left(self):
         for i in self.list_column_select_x.curselection()[::-1]:
@@ -121,12 +128,12 @@ class Main:
             self.list_column_x.delete(i)
 
     def clean_data(self):
-        clean_data = CleanData(self.dataset.df, self.root)
+        clean_data = CleanData(self.dataset.df, self.root, self.file_name)
         self.root.wait_window(clean_data.root)
 
         if clean_data.dataset is not None:
             self.dataset.df = clean_data.df
-            self.load_data()
+            self.load_data_after_clean()
 
     def start(self):
         print(self.select_target.get())
@@ -135,7 +142,6 @@ class Main:
         print(self.dataset.df)
         train.train(self.dataset.df, self.select_target.get(),
                     list(self.list_column_x.get(0, tk.END)), self.select_AI.get())
-    
 
 
 if __name__ == "__main__":
