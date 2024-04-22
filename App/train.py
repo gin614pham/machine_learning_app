@@ -80,6 +80,7 @@ def KNN(df, target, columns):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
+    accuracy3 = accuracy_score(y_test, y_pred.round())
     r2 = r2_score(y_test, y_pred)
     plt.scatter(y_test, y_pred)
     plt.xlabel("Giá trị thực tế")
@@ -87,11 +88,11 @@ def KNN(df, target, columns):
     plt.title("So sánh giá trị thực tế và dự đoán")
 
     # Thêm chú thích về giá trị K
-    plt.text(-0.1, 1.05, f"Best k: {best_k}", ha='left', va='center', transform=plt.gca().transAxes, fontsize=10)
+    plt.text(-0.1, 1.05, f"k = {best_k}", ha='left', va='center', transform=plt.gca().transAxes, fontsize=10)
 
     # Thêm đường thẳng MSE
     plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], linestyle='--', color='red')  # Đường chéo
-    plt.text(max(y_test) * 0.7, min(y_test) * 1.1, f'MSE: {mse:.2f}', fontsize=12, color='blue')  # Hiển thị MSE
+    plt.text(max(y_test) * 0.7, min(y_test) * 1.1, f'Accuracy: {accuracy3:.2f}', fontsize=12, color='blue')  # Hiển thị MSE
 
     plt.show()
     print(mse, r2)
