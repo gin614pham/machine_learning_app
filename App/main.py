@@ -6,6 +6,7 @@ import tkinter.filedialog as fd
 import tkinter.simpledialog as sd
 import tkinter.colorchooser as cc
 import pandas as pd
+from controller.chart import Chart
 from model.dataset import Dataset
 from model.typeAI import typeAI
 from controller import readFile
@@ -33,6 +34,11 @@ class Main:
             self.frame_input_file, text="Clean Data", command=self.clean_data)
         self.button_clean_data.pack(side=tk.TOP, padx=10, pady=5)
         self.button_clean_data.configure(state=tk.DISABLED)
+
+        self.button_chart = tk.Button(
+            self.frame_input_file, text="Chart", command=self.chart)
+        self.button_chart.pack(side=tk.TOP, padx=10, pady=5)
+        self.button_chart.configure(state=tk.DISABLED)
 
         self.label_select = tk.Label(
             self.root, text="Select Target Column: ")
@@ -98,6 +104,7 @@ class Main:
                     values=self.dataset.get_list_column())
                 self.select_target.current(0)
                 self.button_clean_data.configure(state=tk.NORMAL)
+                self.button_chart.configure(state=tk.NORMAL)
                 self.load_data()
         except Exception as e:
             msg.showerror("Error", str(e))
@@ -134,6 +141,9 @@ class Main:
         if clean_data.dataset is not None:
             self.dataset.df = clean_data.df
             self.load_data_after_clean()
+
+    def chart(self):
+        chart = Chart(self.dataset.df, self.root, self.file_name)
 
     def start(self):
         print(self.select_target.get())
