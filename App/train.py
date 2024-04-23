@@ -64,7 +64,7 @@ def KNN(df, target, columns):
     y = df[target]
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42)
-    k_values = [1, 3, 5, 7, 9]
+    k_values = [1, 3, 5, 7, 9, 11]
 
     best_accuracy = 0
     best_k = None
