@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 colors = ['blue', 'green', 'red', 'purple', 'orange', 'yellow', 'cyan', 'magenta', 'gray', 'brown', 'pink', 'teal']
-def train(df, a, b, Chart):
+def draw(df, a, b, Chart):
     if Chart == 'Pie Chart':
         return draw_circle(a, df)
     elif Chart == 'Bar Chart':
