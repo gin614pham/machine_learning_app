@@ -7,7 +7,7 @@ class typeAI:
 
 class typeChar:
     def __init__(self):
-        self.name = ["Pie Chart", "Bar Chart", "Histogram"]
+        self.name = ["Pie Chart", "Bar Chart", "Histogram", "Line Chart", "Box Plot", "Scatter Plot", "Heatmap", "Violin Plot", "Pair Plot", "Joint Plot", "Swarm Plot", "Boxen Plot", "Rug Plot"]
 
     def get_name(self):
         return self.name
