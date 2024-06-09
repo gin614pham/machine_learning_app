@@ -6,12 +6,13 @@ import tkinter.simpledialog as sd
 import tkinter.colorchooser as cc
 import pandas as pd
 from tkinter import filedialog
+from model.drawPlt import draw
 from model.dataset import Dataset
-from model.typeAI import typeAI
 from controller import readFile
 from controller.cleanNanData import CleanNanData
 from model.data import Data
 from tabulate import tabulate
+from model.typeAI import typeChar
 
 
 class Chart:
@@ -49,7 +50,7 @@ class Chart:
             self.frame_chart, text="Type: ")
         self.label_type.grid(row=2, column=0, padx=5, pady=5)
         self.select_type = ttk.Combobox(
-            self.frame_chart, state="readonly", values=typeAI().get_name())
+            self.frame_chart, state="readonly", values=typeChar().get_name())
         self.select_type.grid(row=2, column=1, padx=5, pady=5)
 
         self.button_show = tk.Button(
@@ -65,7 +66,11 @@ class Chart:
         window.deiconify()
 
     def show(self):
-        print(self.select_x.get(), self.select_y.get(), self.select_type.get())
+        selected_x = self.select_x.get()
+        selected_y = self.select_y.get()
+        selected_type = self.select_type.get()
+
+        draw(self.df, selected_x, selected_y, selected_type)
 
     def reset(self):
         self.select_x.set("")
