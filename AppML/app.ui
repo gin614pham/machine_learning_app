@@ -29,7 +29,7 @@
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,8">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,9">
     <item>
      <widget class="QFrame" name="frame">
       <property name="autoFillBackground">
@@ -586,7 +586,7 @@ p, li { white-space: pre-wrap; }
          </widget>
          <widget class="QWidget" name="chart_page"/>
          <widget class="QWidget" name="train_page">
-          <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="7,3">
+          <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="8,2">
            <item>
             <widget class="QFrame" name="frame_12">
              <property name="frameShape">
@@ -595,6 +595,23 @@ p, li { white-space: pre-wrap; }
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
+             <layout class="QVBoxLayout" name="verticalLayout_13">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QWidget" name="widgetMatplotlib" native="true"/>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -658,14 +675,14 @@ p, li { white-space: pre-wrap; }
                   <widget class="QListWidget" name="listWidgetColumnSelected"/>
                  </item>
                  <item row="2" column="0">
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="btnAddColumn">
                    <property name="text">
                     <string>Add &gt;&gt;</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QPushButton" name="pushButton_2">
+                  <widget class="QPushButton" name="btnDelColumn">
                    <property name="text">
                     <string>&lt;&lt; Delete</string>
                    </property>

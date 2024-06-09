@@ -352,6 +352,14 @@ class Ui_MainWindow(object):
         self.frame_12.setObjectName(u"frame_12")
         self.frame_12.setFrameShape(QFrame.StyledPanel)
         self.frame_12.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_13 = QVBoxLayout(self.frame_12)
+        self.verticalLayout_13.setObjectName(u"verticalLayout_13")
+        self.verticalLayout_13.setContentsMargins(0, 0, 0, 0)
+        self.widgetMatplotlib = QWidget(self.frame_12)
+        self.widgetMatplotlib.setObjectName(u"widgetMatplotlib")
+
+        self.verticalLayout_13.addWidget(self.widgetMatplotlib)
+
 
         self.horizontalLayout_7.addWidget(self.frame_12)
 
@@ -406,15 +414,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.listWidgetColumnSelected, 1, 1, 1, 1)
 
-        self.pushButton = QPushButton(self.frame_16)
-        self.pushButton.setObjectName(u"pushButton")
+        self.btnAddColumn = QPushButton(self.frame_16)
+        self.btnAddColumn.setObjectName(u"btnAddColumn")
 
-        self.gridLayout.addWidget(self.pushButton, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.btnAddColumn, 2, 0, 1, 1)
 
-        self.pushButton_2 = QPushButton(self.frame_16)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.btnDelColumn = QPushButton(self.frame_16)
+        self.btnDelColumn.setObjectName(u"btnDelColumn")
 
-        self.gridLayout.addWidget(self.pushButton_2, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.btnDelColumn, 2, 1, 1, 1)
 
 
         self.verticalLayout_12.addWidget(self.frame_16)
@@ -461,8 +469,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.frame_13)
 
-        self.horizontalLayout_7.setStretch(0, 7)
-        self.horizontalLayout_7.setStretch(1, 3)
+        self.horizontalLayout_7.setStretch(0, 8)
+        self.horizontalLayout_7.setStretch(1, 2)
         self.stackedWidget.addWidget(self.train_page)
 
         self.horizontalLayout_3.addWidget(self.stackedWidget)
@@ -470,8 +478,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.frame_2)
 
-        self.horizontalLayout.setStretch(0, 2)
-        self.horizontalLayout.setStretch(1, 8)
+        self.horizontalLayout.setStretch(0, 1)
+        self.horizontalLayout.setStretch(1, 9)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -527,8 +535,8 @@ class Ui_MainWindow(object):
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Target column", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Columns:", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"Select:", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Add >>", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"<< Delete", None))
+        self.btnAddColumn.setText(QCoreApplication.translate("MainWindow", u"Add >>", None))
+        self.btnDelColumn.setText(QCoreApplication.translate("MainWindow", u"<< Delete", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Model", None))
         self.comboBoxTypeModel.setItemText(0, QCoreApplication.translate("MainWindow", u"Linear Regression", None))
         self.comboBoxTypeModel.setItemText(1, QCoreApplication.translate("MainWindow", u"Logistic Regression", None))

@@ -1,6 +1,13 @@
 from app_ui import Ui_MainWindow
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QTableWidgetItem, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QTableWidgetItem, QMessageBox, QVBoxLayout, QWidget
 import pandas as pd
+from ModelTrain import train
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from mplcanvas import MplCanvas
+from sklearn.tree import plot_tree
+import seaborn as sns
+import numpy as np
 
 ROW = 1
 COLUMN = 0
@@ -11,6 +18,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("AppML")
+        # set full screen
+        self.showMaximized()
+        self.btnQuit.setShortcut("Ctrl+Q")
+
         self.btnQuit.clicked.connect(self.quit_app)
         self.btnReadFile.clicked.connect(self.read_file)
         # set btnClear to switch page
@@ -25,9 +36,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnSave.clicked.connect(self.on_click_save)
         self.btnSaveCSV.clicked.connect(self.on_click_save_data)
         self.btnDeleteDuplicate.clicked.connect(self.on_click_del_duplicate)
+        self.btnAddColumn.clicked.connect(self.on_click_add_column)
+        self.btnDelColumn.clicked.connect(self.on_click_remove_column)
+        self.btnTrainModel.clicked.connect(self.on_click_train_model)
+        self.btnToNumeric.clicked.connect(self.on_click_convert_numeric)
+
+        self.comboBoxTargetColumn.currentTextChanged.connect(
+            self.on_target_column_change)
 
         # set home page
         self.stackedWidget.setCurrentIndex(0)
+
+        self.plot_layout = QVBoxLayout(self.widgetMatplotlib)
+        self.canvas = MplCanvas(self.widgetMatplotlib,
+                                width=5, height=4, dpi=100)
+        self.plot_layout.addWidget(self.canvas)
+        self.plot_sample_data()
+
+    def plot_sample_data(self):
+        # Vẽ một biểu đồ mẫu
+        t = [0, 1, 2, 3, 4, 5]
+        s = [0, 1, 4, 9, 16, 25]
+
+        self.canvas.axes.plot(t, s)
+        self.canvas.draw()
 
     def read_file(self):
         # read file csv
@@ -90,7 +122,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btnClear.setChecked(True)
 
     def quit_app(self):
-        self.close()
+        # check if user want to quit
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Icon.Question)
+        msg.setText("Do you want to quit?")
+        msg.setInformativeText("Are you sure?")
+        msg.setWindowTitle("Quit App")
+        msg.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        response = msg.exec()
+
+        if response == QMessageBox.StandardButton.Yes:
+            self.close()
 
     def error_message(self, message):
         msg = QMessageBox()
@@ -315,16 +359,97 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidgetColumns.addItem(col)
         self.listWidgetColumnSelected.clear()
 
+        self.on_target_column_change()
+
     def on_target_column_change(self):
         column = self.comboBoxTargetColumn.currentText()
         columns = self.df.columns
-        # get list columns in list widget
-        for item in self.listWidgetColumnSelected.selectedItems():
-            column_selected = item.text()
-            if column_selected != column:
-                self.listWidgetColumnSelected.addItem(column_selected)
 
+        self.listWidgetColumnSelected.clear()
         self.listWidgetColumns.clear()
         for col in columns:
             if col != column:
                 self.listWidgetColumns.addItem(col)
+
+    def on_click_add_column(self):
+        self.listWidgetColumnSelected.addItem(
+            self.listWidgetColumns.currentItem().text())
+        self.listWidgetColumns.takeItem(
+            self.listWidgetColumns.currentRow())
+
+    def on_click_remove_column(self):
+        self.listWidgetColumns.addItem(
+            self.listWidgetColumnSelected.currentItem().text())
+        self.listWidgetColumnSelected.takeItem(
+            self.listWidgetColumnSelected.currentRow())
+
+    def on_click_train_model(self):
+        target_column = self.comboBoxTargetColumn.currentText()
+        selected_columns = [self.listWidgetColumnSelected.item(
+            i).text() for i in range(self.listWidgetColumnSelected.count())]
+        model_type = self.comboBoxTypeModel.currentText()
+        if model_type == "Linear Regression":
+            mse, r2, X_test, y_pred = train(
+                self.df, target_column, selected_columns, model_type)
+            self.plot_linear_regression(X_test, y_pred)
+        elif model_type == "Logistic Regression":
+            mse, r2, accuracy, cm = train(
+                self.df, target_column, selected_columns, model_type
+            )
+            self.plot_logistic_regression(cm, accuracy)
+        elif model_type == "KNN":
+            mse, r2, y_test, y_pred, best_k, accuracy3 = train(
+                self.df, target_column, selected_columns, model_type
+            )
+            self.plot_knn(y_test, y_pred, best_k, accuracy3)
+        elif model_type == "Decision Tree":
+            mse, r2, model, columns = train(
+                self.df, target_column, selected_columns, model_type
+            )
+            self.plot_decision_tree(model, columns)
+
+    def plot_linear_regression(self, X_test: pd.DataFrame, y_pred: pd.Series):
+        self.canvas.axes.clear()  # Clear previous plot
+        self.canvas.axes.scatter(
+            X_test.iloc[:, 0], y_pred, label='Predicted values')
+        self.canvas.axes.plot([min(X_test.iloc[:, 0]), max(X_test.iloc[:, 0])],
+                              [min(y_pred), max(y_pred)], color='red', linestyle='--', label='Trend line')
+        self.canvas.axes.set_xlabel("X values (first column)")
+        self.canvas.axes.set_ylabel("Predicted Y values")
+        self.canvas.axes.set_title("Predicted Y values based on X values")
+        self.canvas.axes.legend()
+        self.canvas.draw()
+
+    def plot_logistic_regression(self, cm: np.ndarray, accuracy: float):
+        self.canvas.axes.clear()  # Clear previous plot
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=self.canvas.axes)
+        self.canvas.axes.text(-0.1, 1.05, f"Accuracy: {accuracy:.4f}", ha='left',
+                              va='center', transform=self.canvas.axes.transAxes, fontsize=10)
+        self.canvas.axes.set_title('Confusion Matrix')
+        self.canvas.axes.set_xlabel('Predicted')
+        self.canvas.axes.set_ylabel('Actual')
+        self.canvas.draw()
+
+    def plot_knn(self, y_test: pd.Series, y_pred: pd.Series, best_k: int, accuracy3: float):
+        self.canvas.axes.clear()
+        self.canvas.axes.scatter(y_test, y_pred)
+        self.canvas.axes.set_xlabel("Giá trị thực tế")
+        self.canvas.axes.set_ylabel("Giá trị dự đoán")
+        self.canvas.axes.set_title("So sánh giá trị thực tế và dự đoán")
+
+        self.canvas.axes.text(-0.1, 1.05, f"k = {best_k}", ha='left',
+                              va='center', transform=self.canvas.axes.transAxes, fontsize=10)
+
+        self.canvas.axes.plot([min(y_test), max(y_test)], [min(
+            y_test), max(y_test)], linestyle='--', color='red')
+        self.canvas.axes.text(max(y_test) * 0.7, min(y_test) * 1.1,
+                              f'Accuracy: {accuracy3:.2f}', fontsize=12, color='blue')
+
+        self.canvas.draw()
+
+    def plot_decision_tree(self, model, columns):
+        self.canvas.axes.clear()  # Clear previous plot
+
+        plot_tree(model, feature_names=columns, class_names=[str(
+            i) for i in model.classes_], filled=True, fontsize=8, impurity=False, rounded=True, max_depth=3, ax=self.canvas.axes)
+        self.canvas.draw()
