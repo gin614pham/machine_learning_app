@@ -19,7 +19,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setWindowTitle("AppML")
+        self.setWindowTitle("Machine Learning App")
         # set full screen
         self.showMaximized()
         self.btnQuit.setShortcut("Ctrl+Q")
@@ -63,15 +63,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chart_canvas = MplCanvas(
             self.widgetChart, width=5, height=4, dpi=100)
         self.chart_layout.addWidget(self.chart_canvas)
-
-        self.plot_sample_data()
-
-    def plot_sample_data(self):
-        t = [0, 1, 2, 3, 4, 5]
-        s = [0, 1, 4, 9, 16, 25]
-
-        self.canvas.axes.plot(t, s)
-        self.canvas.draw()
 
     def read_file(self):
         # read file csv
@@ -120,10 +111,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.switch_page(2)
         self.set_data_chart_page()
         self.set_chart_type_page()
+        self.reset_chart_layout()
 
     def on_click_train(self):
         self.switch_page(3)
         self.load_page_train()
+        self.reset_train_layout()
 
     def switch_page(self, index):
         self.stackedWidget.setCurrentIndex(index)
@@ -398,6 +391,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidgetColumnSelected.currentRow())
 
     def on_click_train_model(self):
+        self.reset_train_layout()
         target_column = self.comboBoxTargetColumn.currentText()
         selected_columns = [self.listWidgetColumnSelected.item(
             i).text() for i in range(self.listWidgetColumnSelected.count())]
@@ -697,3 +691,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chart_canvas.axes.set_ylabel('Frequency')
         self.chart_canvas.axes.set_title('Rug Plot of ' + a)
         self.chart_canvas.draw()
+
+    def reset_train_layout(self):
+        self.plot_layout.removeWidget(self.canvas)
+        self.canvas.deleteLater()
+
+        self.canvas = MplCanvas(
+            self.widgetMatplotlib, width=5, height=4, dpi=100)
+        self.plot_layout.addWidget(self.canvas)
