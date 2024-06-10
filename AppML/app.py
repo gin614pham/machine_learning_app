@@ -465,6 +465,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.draw()
 
     def set_data_chart_page(self):
+        # reset data
+        self.comboBoxChartX.clear()
+        self.comboBoxChartY.clear()
+        self.comboBoxChartType.clear()
+
         columns = self.df.columns
         for column in columns:
             self.comboBoxChartX.addItem(column)
