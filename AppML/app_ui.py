@@ -378,6 +378,31 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_15.addWidget(self.line_3)
 
+        self.frame_22 = QFrame(self.frame_18)
+        self.frame_22.setObjectName(u"frame_22")
+        self.frame_22.setFrameShape(QFrame.StyledPanel)
+        self.frame_22.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_16 = QVBoxLayout(self.frame_22)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.radioButtonVar = QRadioButton(self.frame_22)
+        self.btnGTypeVariable = QButtonGroup(MainWindow)
+        self.btnGTypeVariable.setObjectName(u"btnGTypeVariable")
+        self.btnGTypeVariable.addButton(self.radioButtonVar)
+        self.radioButtonVar.setObjectName(u"radioButtonVar")
+        self.radioButtonVar.setChecked(False)
+
+        self.verticalLayout_16.addWidget(self.radioButtonVar)
+
+        self.radioButton2Var = QRadioButton(self.frame_22)
+        self.btnGTypeVariable.addButton(self.radioButton2Var)
+        self.radioButton2Var.setObjectName(u"radioButton2Var")
+        self.radioButton2Var.setChecked(True)
+
+        self.verticalLayout_16.addWidget(self.radioButton2Var)
+
+
+        self.verticalLayout_15.addWidget(self.frame_22)
+
         self.frame_19 = QFrame(self.frame_18)
         self.frame_19.setObjectName(u"frame_19")
         self.frame_19.setFrameShape(QFrame.StyledPanel)
@@ -435,7 +460,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_15.addWidget(self.frame_21)
 
-        self.verticalSpacer_4 = QSpacerItem(20, 425, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_4 = QSpacerItem(20, 347, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_15.addItem(self.verticalSpacer_4)
 
@@ -591,8 +616,10 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.radioButtonReplace.clicked.connect(self.frame_11.show)
         self.radioButtonDelete.clicked.connect(self.frame_11.hide)
+        self.radioButton2Var.clicked.connect(self.frame_20.show)
+        self.radioButtonVar.clicked.connect(self.frame_20.hide)
 
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(0)
 
 
@@ -639,6 +666,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Convert to numeric", None))
         self.btnSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Draw a chart", None))
+        self.radioButtonVar.setText(QCoreApplication.translate("MainWindow", u"1 variable", None))
+        self.radioButton2Var.setText(QCoreApplication.translate("MainWindow", u"2 variables", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"X column", None))
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Y column", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Chart type", None))

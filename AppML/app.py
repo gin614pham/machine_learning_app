@@ -45,6 +45,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnToNumeric.clicked.connect(self.on_click_convert_numeric)
         self.btnShowChart.clicked.connect(self.on_click_show_chart)
 
+        # check QButtonGroup have changed radio button selected
+        self.btnGTypeVariable.buttonClicked.connect(self.set_chart_type_page)
+
         self.comboBoxTargetColumn.currentTextChanged.connect(
             self.on_target_column_change)
 
@@ -116,6 +119,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_click_chart(self):
         self.switch_page(2)
         self.set_data_chart_page()
+        self.set_chart_type_page()
 
     def on_click_train(self):
         self.switch_page(3)
@@ -468,15 +472,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # reset data
         self.comboBoxChartX.clear()
         self.comboBoxChartY.clear()
-        self.comboBoxChartType.clear()
 
         columns = self.df.columns
         for column in columns:
             self.comboBoxChartX.addItem(column)
             self.comboBoxChartY.addItem(column)
 
-        list_chart = ChartModel().get_list_chart_name()
-        for chart in list_chart:
+    def set_chart_type_page(self):
+        self.comboBoxChartType.clear()
+
+        if self.radioButton2Var.isChecked():
+            chart_type = ChartModel().get_2_value()
+        else:
+            chart_type = ChartModel().get_1_value()
+
+        for chart in chart_type:
             self.comboBoxChartType.addItem(chart)
 
     def on_click_show_chart(self):
