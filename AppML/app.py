@@ -8,6 +8,8 @@ from mplcanvas import MplCanvas
 from sklearn.tree import plot_tree
 import seaborn as sns
 import numpy as np
+from ChartModel import ChartModel
+from matplotlib.ticker import FixedLocator
 
 ROW = 1
 COLUMN = 0
@@ -28,6 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnHome.clicked.connect(self.on_click_home)
         self.btnClear.clicked.connect(self.on_click_clear_data)
         self.btnTrain.clicked.connect(self.on_click_train)
+        self.btnChart.clicked.connect(self.on_click_chart)
 
         self.btnInfo.clicked.connect(self.check_info_data)
         self.btnNaN.clicked.connect(self.check_null_data)
@@ -40,6 +43,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnDelColumn.clicked.connect(self.on_click_remove_column)
         self.btnTrainModel.clicked.connect(self.on_click_train_model)
         self.btnToNumeric.clicked.connect(self.on_click_convert_numeric)
+        self.btnShowChart.clicked.connect(self.on_click_show_chart)
 
         self.comboBoxTargetColumn.currentTextChanged.connect(
             self.on_target_column_change)
@@ -51,10 +55,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas = MplCanvas(self.widgetMatplotlib,
                                 width=5, height=4, dpi=100)
         self.plot_layout.addWidget(self.canvas)
+
+        self.chart_layout = QVBoxLayout(self.widgetChart)
+        self.chart_canvas = MplCanvas(
+            self.widgetChart, width=5, height=4, dpi=100)
+        self.chart_layout.addWidget(self.chart_canvas)
+
         self.plot_sample_data()
 
     def plot_sample_data(self):
-        # Vẽ một biểu đồ mẫu
         t = [0, 1, 2, 3, 4, 5]
         s = [0, 1, 4, 9, 16, 25]
 
@@ -106,6 +115,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def on_click_chart(self):
         self.switch_page(2)
+        self.set_data_chart_page()
 
     def on_click_train(self):
         self.switch_page(3)
@@ -453,3 +463,199 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         plot_tree(model, feature_names=columns, class_names=[str(
             i) for i in model.classes_], filled=True, fontsize=8, impurity=False, rounded=True, max_depth=3, ax=self.canvas.axes)
         self.canvas.draw()
+
+    def set_data_chart_page(self):
+        columns = self.df.columns
+        for column in columns:
+            self.comboBoxChartX.addItem(column)
+            self.comboBoxChartY.addItem(column)
+
+        list_chart = ChartModel().get_list_chart_name()
+        for chart in list_chart:
+            self.comboBoxChartType.addItem(chart)
+
+    def on_click_show_chart(self):
+        x_column = self.comboBoxChartX.currentText()
+        y_column = self.comboBoxChartY.currentText()
+        chart_type = self.comboBoxChartType.currentText()
+
+        self.reset_chart_layout()
+        self.draw_chart(x_column, y_column, chart_type)
+
+    def reset_chart_layout(self):
+        self.chart_layout.removeWidget(self.chart_canvas)
+        self.chart_canvas.deleteLater()
+        self.chart_canvas = MplCanvas(
+            self.widgetChart, width=5, height=4, dpi=100)
+        self.chart_layout.addWidget(self.chart_canvas)
+
+    def draw_chart(self, x_column, y_column, chart_type):
+        if chart_type == "Pie Chart":
+            self.draw_circle(x_column, self.df)
+        elif chart_type == "Bar Chart":
+            self.draw_bar(x_column, y_column, self.df)
+        elif chart_type == "Histogram":
+            self.draw_hist(x_column, self.df)
+        elif chart_type == "Line Chart":
+            self.draw_line(x_column, y_column, self.df)
+        elif chart_type == "Box Plot":
+            self.draw_box(x_column, self.df)
+        elif chart_type == "Scatter Plot":
+            self.draw_scatter(x_column, y_column, self.df)
+        elif chart_type == "Heatmap":
+            self.draw_heatmap(self.df)
+        elif chart_type == "Violin Plot":
+            self.draw_violin(x_column, y_column, self.df)
+        elif chart_type == "Pair Plot":
+            self.draw_pairplot(self.df)
+        elif chart_type == "Joint Plot":
+            self.draw_jointplot(x_column, y_column, self.df)
+        elif chart_type == "Swarm Plot":
+            self.draw_swarmplot(x_column, y_column, self.df)
+        elif chart_type == "Boxen Plot":
+            self.draw_boxenplot(x_column, y_column, self.df)
+        elif chart_type == "Rug Plot":
+            self.draw_rugplot(x_column, self.df)
+
+    def draw_circle(self, a, df):
+        self.canvas.fig.set_size_inches(8, 8)
+        self.chart_canvas.axes.clear()
+
+        self.chart_canvas.axes.pie(
+            df[a].value_counts(), labels=df[a].unique(), autopct='%1.1f%%', startangle=90
+        )
+
+        self.chart_canvas.axes.set_title('Pie Chart of ' + a)
+        self.chart_canvas.draw()
+
+    def draw_bar(self, a, b, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+
+        df_grouped = df.groupby(a)[b].sum().reset_index(
+        ).sort_values(by=b, ascending=False)
+        sns.barplot(x=a, y=b, data=df_grouped, ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel(b)
+        self.chart_canvas.axes.set_title(
+            'Bar Chart of ' + b + ' Grouped by ' + a)
+        self.chart_canvas.axes.set_xticklabels(
+            self.chart_canvas.axes.get_xticklabels(), rotation=45)
+        self.chart_canvas.draw()
+
+    def draw_hist(self, a, df):
+        self.canvas.fig.set_size_inches(8, 6)
+        self.chart_canvas.axes.clear()
+
+        self.chart_canvas.axes.hist(
+            df[a], bins=20, color='skyblue', edgecolor='black')
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel('Frequency')
+        self.chart_canvas.axes.set_title('Histogram of ' + a)
+        self.chart_canvas.draw()
+
+    def draw_line(self, a, b, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+
+        sns.lineplot(x=a, y=b, data=df, marker='o', ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel(b)
+        self.chart_canvas.axes.set_title('Line Chart of ' + b + ' Over ' + a)
+        self.chart_canvas.axes.set_xticklabels(
+            self.chart_canvas.axes.get_xticklabels(), rotation=45)
+        self.chart_canvas.draw()
+
+    def draw_box(self, a, df):
+        self.canvas.fig.set_size_inches(8, 6)
+        self.chart_canvas.axes.clear()
+
+        sns.boxplot(x=a, data=df, ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel('Value')
+        self.chart_canvas.axes.set_title('Box Plot of ' + a)
+        self.chart_canvas.axes.set_xticklabels(
+            self.chart_canvas.axes.get_xticklabels(), rotation=45)
+        self.chart_canvas.draw()
+
+    def draw_scatter(self, a, b, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+
+        self.chart_canvas.axes.scatter(df[a], df[b], alpha=0.5)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel(b)
+        self.chart_canvas.axes.set_title('Scatter Plot of ' + a + ' vs ' + b)
+        self.chart_canvas.draw()
+
+    def draw_heatmap(self, df):
+        self.canvas.fig.set_size_inches(10, 8)
+        self.chart_canvas.axes.clear()
+
+        sns.heatmap(df.corr(), annot=True,
+                    cmap='coolwarm', ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_title('Heatmap of Correlation Matrix')
+        self.chart_canvas.draw()
+
+    def draw_violin(self, a, b, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+
+        sns.violinplot(x=a, y=b, data=df, ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel(b)
+        self.chart_canvas.axes.set_title('Violin Plot of ' + a + ' vs ' + b)
+        self.chart_canvas.axes.set_xticklabels(
+            self.chart_canvas.axes.get_xticklabels(), rotation=45)
+        self.chart_canvas.draw()
+
+    def draw_pairplot(self, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+        sns.pairplot(df)
+        self.chart_canvas.axes.set_title('Pair Plot')
+        self.chart_canvas.draw()
+
+    def draw_jointplot(self, a, b, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+        sns.jointplot(x=a, y=b, data=df, kind="scatter",
+                      ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel(b)
+        self.chart_canvas.axes.set_title('Joint Plot of ' + a + ' vs ' + b)
+        self.chart_canvas.draw()
+
+    def draw_swarmplot(self, a, b, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+
+        sns.swarmplot(x=a, y=b, data=df, ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel(b)
+        self.chart_canvas.axes.set_title('Swarm Plot of ' + a + ' vs ' + b)
+        self.chart_canvas.axes.set_xticklabels(
+            self.chart_canvas.axes.get_xticklabels(), rotation=45)
+        self.chart_canvas.draw()
+
+    def draw_boxenplot(self, a, b, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+
+        sns.boxenplot(x=a, y=b, data=df, ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel(b)
+        self.chart_canvas.axes.set_title('Boxen Plot of ' + a + ' vs ' + b)
+        self.chart_canvas.axes.set_xticklabels(
+            self.chart_canvas.axes.get_xticklabels(), rotation=45)
+        self.chart_canvas.draw()
+
+    def draw_rugplot(self, a, df):
+        self.canvas.fig.set_size_inches(10, 6)
+        self.chart_canvas.axes.clear()
+
+        sns.rugplot(df[a], height=0.5, ax=self.chart_canvas.axes)
+        self.chart_canvas.axes.set_xlabel(a)
+        self.chart_canvas.axes.set_ylabel('Frequency')
+        self.chart_canvas.axes.set_title('Rug Plot of ' + a)
+        self.chart_canvas.draw()

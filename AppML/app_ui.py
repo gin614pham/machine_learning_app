@@ -343,6 +343,112 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.clear_page)
         self.chart_page = QWidget()
         self.chart_page.setObjectName(u"chart_page")
+        self.horizontalLayout_10 = QHBoxLayout(self.chart_page)
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.horizontalLayout_10.setContentsMargins(11, -1, -1, -1)
+        self.frame_17 = QFrame(self.chart_page)
+        self.frame_17.setObjectName(u"frame_17")
+        self.frame_17.setFrameShape(QFrame.StyledPanel)
+        self.frame_17.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_14 = QVBoxLayout(self.frame_17)
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.widgetChart = QWidget(self.frame_17)
+        self.widgetChart.setObjectName(u"widgetChart")
+
+        self.verticalLayout_14.addWidget(self.widgetChart)
+
+
+        self.horizontalLayout_10.addWidget(self.frame_17)
+
+        self.frame_18 = QFrame(self.chart_page)
+        self.frame_18.setObjectName(u"frame_18")
+        self.frame_18.setFrameShape(QFrame.StyledPanel)
+        self.frame_18.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_15 = QVBoxLayout(self.frame_18)
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.label_10 = QLabel(self.frame_18)
+        self.label_10.setObjectName(u"label_10")
+
+        self.verticalLayout_15.addWidget(self.label_10)
+
+        self.line_3 = QFrame(self.frame_18)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_15.addWidget(self.line_3)
+
+        self.frame_19 = QFrame(self.frame_18)
+        self.frame_19.setObjectName(u"frame_19")
+        self.frame_19.setFrameShape(QFrame.StyledPanel)
+        self.frame_19.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_11 = QHBoxLayout(self.frame_19)
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.label_11 = QLabel(self.frame_19)
+        self.label_11.setObjectName(u"label_11")
+
+        self.horizontalLayout_11.addWidget(self.label_11)
+
+        self.comboBoxChartX = QComboBox(self.frame_19)
+        self.comboBoxChartX.setObjectName(u"comboBoxChartX")
+
+        self.horizontalLayout_11.addWidget(self.comboBoxChartX)
+
+
+        self.verticalLayout_15.addWidget(self.frame_19)
+
+        self.frame_20 = QFrame(self.frame_18)
+        self.frame_20.setObjectName(u"frame_20")
+        self.frame_20.setFrameShape(QFrame.StyledPanel)
+        self.frame_20.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_12 = QHBoxLayout(self.frame_20)
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.label_12 = QLabel(self.frame_20)
+        self.label_12.setObjectName(u"label_12")
+
+        self.horizontalLayout_12.addWidget(self.label_12)
+
+        self.comboBoxChartY = QComboBox(self.frame_20)
+        self.comboBoxChartY.setObjectName(u"comboBoxChartY")
+
+        self.horizontalLayout_12.addWidget(self.comboBoxChartY)
+
+
+        self.verticalLayout_15.addWidget(self.frame_20)
+
+        self.frame_21 = QFrame(self.frame_18)
+        self.frame_21.setObjectName(u"frame_21")
+        self.frame_21.setFrameShape(QFrame.StyledPanel)
+        self.frame_21.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_13 = QHBoxLayout(self.frame_21)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.label_13 = QLabel(self.frame_21)
+        self.label_13.setObjectName(u"label_13")
+
+        self.horizontalLayout_13.addWidget(self.label_13)
+
+        self.comboBoxChartType = QComboBox(self.frame_21)
+        self.comboBoxChartType.setObjectName(u"comboBoxChartType")
+
+        self.horizontalLayout_13.addWidget(self.comboBoxChartType)
+
+
+        self.verticalLayout_15.addWidget(self.frame_21)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 425, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_15.addItem(self.verticalSpacer_4)
+
+        self.btnShowChart = QPushButton(self.frame_18)
+        self.btnShowChart.setObjectName(u"btnShowChart")
+
+        self.verticalLayout_15.addWidget(self.btnShowChart)
+
+
+        self.horizontalLayout_10.addWidget(self.frame_18)
+
+        self.horizontalLayout_10.setStretch(0, 8)
+        self.horizontalLayout_10.setStretch(1, 2)
         self.stackedWidget.addWidget(self.chart_page)
         self.train_page = QWidget()
         self.train_page.setObjectName(u"train_page")
@@ -532,6 +638,11 @@ class Ui_MainWindow(object):
         self.btnToNumeric.setText(QCoreApplication.translate("MainWindow", u"Convert all to numeric", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Convert to numeric", None))
         self.btnSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Draw a chart", None))
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"X column", None))
+        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Y column", None))
+        self.label_13.setText(QCoreApplication.translate("MainWindow", u"Chart type", None))
+        self.btnShowChart.setText(QCoreApplication.translate("MainWindow", u"Show", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Target column", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Columns:", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"Select:", None))
