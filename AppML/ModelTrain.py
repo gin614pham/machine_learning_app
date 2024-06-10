@@ -47,23 +47,20 @@ def Logistic_Regression(df, target, columns):
 def Linear_Regression(df, target, columns):
     X = df[columns]
     y = df[target]
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = LinearRegression()
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
-
+    
     plt.scatter(X_test.iloc[:, 0], y_pred, label='Predicted values')
-    plt.plot([min(X_test.iloc[:, 0]), max(X_test.iloc[:, 0])], [
-             min(y_pred), max(y_pred)], color='red', linestyle='--', label='Trend line')
+    plt.plot([min(X_test.iloc[:, 0]), max(X_test.iloc[:, 0])], [min(y_pred), max(y_pred)], color='red', linestyle='--', label='Trend line')
     plt.xlabel("X values (first column)")
     plt.ylabel("Predicted Y values")
     plt.title("Predicted Y values based on X values")
     plt.legend()
     plt.show()
-
     return mse, r2, X_test, y_pred
 
 
