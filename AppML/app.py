@@ -495,7 +495,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         chart_type = self.comboBoxChartType.currentText()
 
         self.reset_chart_layout()
-        self.draw_chart(x_column, y_column, chart_type)
+        if self.radioButton2Var.isChecked():
+            self.draw_chart_2_value(x_column, y_column, chart_type)
+        else:
+            self.draw_char_1_value(x_column, chart_type)
 
     def reset_chart_layout(self):
         self.chart_layout.removeWidget(self.chart_canvas)
@@ -504,17 +507,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.widgetChart, width=5, height=4, dpi=100)
         self.chart_layout.addWidget(self.chart_canvas)
 
-    def draw_chart(self, x_column, y_column, chart_type):
+    def draw_char_1_value(self, x_column, chart_type):
         if chart_type == "Pie Chart":
             self.draw_circle(x_column, self.df)
-        elif chart_type == "Bar Chart":
-            self.draw_bar(x_column, y_column, self.df)
         elif chart_type == "Histogram":
             self.draw_hist(x_column, self.df)
         elif chart_type == "Line Chart":
-            self.draw_line(x_column, y_column, self.df)
+            self.draw_line(a=x_column, df=self.df)
         elif chart_type == "Box Plot":
             self.draw_box(x_column, self.df)
+        elif chart_type == "Rug Plot":
+            self.draw_rug(x_column, self.df)
+
+    def draw_chart_2_value(self, x_column, y_column, chart_type):
+        if chart_type == "Bar Chart":
+            self.draw_bar(x_column, y_column, self.df)
+        elif chart_type == "Line Chart":
+            self.draw_line(a=x_column, b=y_column, df=self.df)
         elif chart_type == "Scatter Plot":
             self.draw_scatter(x_column, y_column, self.df)
         elif chart_type == "Heatmap":
@@ -529,8 +538,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.draw_swarmplot(x_column, y_column, self.df)
         elif chart_type == "Boxen Plot":
             self.draw_boxenplot(x_column, y_column, self.df)
-        elif chart_type == "Rug Plot":
-            self.draw_rugplot(x_column, self.df)
 
     def draw_circle(self, a, df):
         self.canvas.fig.set_size_inches(8, 8)
@@ -569,16 +576,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chart_canvas.axes.set_title('Histogram of ' + a)
         self.chart_canvas.draw()
 
-    def draw_line(self, a, b, df):
+    def draw_line(self, a, df, b=None):
         self.canvas.fig.set_size_inches(10, 6)
         self.chart_canvas.axes.clear()
 
-        sns.lineplot(x=a, y=b, data=df, marker='o', ax=self.chart_canvas.axes)
-        self.chart_canvas.axes.set_xlabel(a)
-        self.chart_canvas.axes.set_ylabel(b)
-        self.chart_canvas.axes.set_title('Line Chart of ' + b + ' Over ' + a)
-        self.chart_canvas.axes.set_xticklabels(
-            self.chart_canvas.axes.get_xticklabels(), rotation=45)
+        if b is None:
+            # draw line chart with a unique value and count of unique value
+            df_grouped = df[a].value_counts().reset_index()
+            df_grouped.columns = [a, 'count']
+            sns.lineplot(x=a, y='count', data=df_grouped, markers='o',
+                         ax=self.chart_canvas.axes)
+            self.chart_canvas.axes.set_xlabel(a)
+            self.chart_canvas.axes.set_ylabel('Count')
+            self.chart_canvas.axes.set_title(
+                'Line Chart of Count of ' + a
+            )
+
+        else:
+
+            sns.lineplot(x=a, y=b, data=df, marker='o',
+                         ax=self.chart_canvas.axes)
+            self.chart_canvas.axes.set_xlabel(a)
+            self.chart_canvas.axes.set_ylabel(b)
+            self.chart_canvas.axes.set_title(
+                'Line Chart of ' + b + ' Over ' + a)
+            self.chart_canvas.axes.set_xticklabels(
+                self.chart_canvas.axes.get_xticklabels(), rotation=45)
         self.chart_canvas.draw()
 
     def draw_box(self, a, df):
