@@ -907,6 +907,11 @@ p, li { white-space: pre-wrap; }
                      <string>Decision Tree</string>
                     </property>
                    </item>
+                   <item>
+                    <property name="text">
+                     <string>Random Forest</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                 </layout>

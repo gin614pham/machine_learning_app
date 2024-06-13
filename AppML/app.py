@@ -399,24 +399,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if model_type == "Linear Regression":
             mse, r2, X_test, y_pred = train(
                 self.df, target_column, selected_columns, model_type)
-            self.plot_linear_regression(X_test, y_pred)
+            self.plot_linear_regression(X_test, y_pred, mse, r2)
         elif model_type == "Logistic Regression":
-            mse, r2, accuracy, cm = train(
+            accuracy, report, cm = train(
                 self.df, target_column, selected_columns, model_type
             )
             self.plot_logistic_regression(cm, accuracy)
         elif model_type == "KNN":
-            mse, r2, y_test, y_pred, best_k, accuracy3 = train(
+            mse, r2, y_test, y_pred, best_k, accuracy_final = train(
                 self.df, target_column, selected_columns, model_type
             )
-            self.plot_knn(y_test, y_pred, best_k, accuracy3)
+            self.plot_knn(y_test, y_pred, best_k, accuracy_final)
         elif model_type == "Decision Tree":
-            mse, r2, model, columns = train(
+            accuracy, report, model, columns = train(
                 self.df, target_column, selected_columns, model_type
             )
-            self.plot_decision_tree(model, columns)
+            self.plot_decision_tree(model, columns, accuracy)
+        elif model_type == "Random Forest":
+            accuracy, report, cm = train(
+                self.df, target_column, selected_columns, model_type
+            )
+            self.plot_radom_forest(cm, accuracy)
 
-    def plot_linear_regression(self, X_test: pd.DataFrame, y_pred: pd.Series):
+    def plot_linear_regression(self, X_test: pd.DataFrame, y_pred: pd.Series, mse: float, r2: float):
         self.canvas.axes.clear()  # Clear previous plot
         self.canvas.axes.scatter(
             X_test.iloc[:, 0], y_pred, label='Predicted values')
@@ -426,6 +431,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.axes.set_ylabel("Predicted Y values")
         self.canvas.axes.set_title("Predicted Y values based on X values")
         self.canvas.axes.legend()
+        self.canvas.axes.text(-0.1, 1.05,
+                              f"MSE: {mse:.4f}\nR2: {r2:.4f}", ha='left', va='top',
+                              transform=self.canvas.axes.transAxes, fontsize=10)
         self.canvas.draw()
 
     def plot_logistic_regression(self, cm: np.ndarray, accuracy: float):
@@ -445,21 +453,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.axes.set_ylabel("Giá trị dự đoán")
         self.canvas.axes.set_title("So sánh giá trị thực tế và dự đoán")
 
-        self.canvas.axes.text(-0.1, 1.05, f"k = {best_k}", ha='left',
-                              va='center', transform=self.canvas.axes.transAxes, fontsize=10)
+        self.canvas.axes.text(-0.1, 1.05,
+                              f"Best K: {best_k}\nAccuracy: {accuracy3:.4f}", ha='left', va='top', transform=self.canvas.axes.transAxes, fontsize=10)
 
         self.canvas.axes.plot([min(y_test), max(y_test)], [min(
             y_test), max(y_test)], linestyle='--', color='red')
-        self.canvas.axes.text(max(y_test) * 0.7, min(y_test) * 1.1,
-                              f'Accuracy: {accuracy3:.2f}', fontsize=12, color='blue')
 
         self.canvas.draw()
 
-    def plot_decision_tree(self, model, columns):
+    def plot_decision_tree(self, model, columns, accuracy):
         self.canvas.axes.clear()  # Clear previous plot
 
+        self.canvas.axes.barh(columns, model.feature_importances_)
+        self.canvas.axes.set_title('Feature Importances')
+        self.canvas.axes.set_xlabel('Importance')
+        self.canvas.axes.set_ylabel('Features')
+        self.canvas.axes.text(-0.1, 1.05,
+                              f"Accuracy: {accuracy:.4f}", ha='left', va='top', transform=self.canvas.axes.transAxes, fontsize=10)
         plot_tree(model, feature_names=columns, class_names=[str(
             i) for i in model.classes_], filled=True, fontsize=8, impurity=False, rounded=True, max_depth=3, ax=self.canvas.axes)
+        self.canvas.draw()
+
+    def plot_radom_forest(self, cm, accuracy):
+        self.canvas.axes.clear()  # Clear previous plot
+
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=self.canvas.axes)
+        self.canvas.axes.set_title('Confusion Matrix')
+        self.canvas.axes.set_xlabel('Predicted')
+        self.canvas.axes.set_ylabel('Actual')
+        self.canvas.axes.text(-0.1, 1.05, f"Accuracy: {accuracy:.4f}", ha='left',
+                              va='center', transform=self.canvas.axes.transAxes, fontsize=10)
         self.canvas.draw()
 
     def set_data_chart_page(self):

@@ -581,6 +581,7 @@ class Ui_MainWindow(object):
         self.comboBoxTypeModel.addItem("")
         self.comboBoxTypeModel.addItem("")
         self.comboBoxTypeModel.addItem("")
+        self.comboBoxTypeModel.addItem("")
         self.comboBoxTypeModel.setObjectName(u"comboBoxTypeModel")
 
         self.horizontalLayout_9.addWidget(self.comboBoxTypeModel)
@@ -682,6 +683,7 @@ class Ui_MainWindow(object):
         self.comboBoxTypeModel.setItemText(1, QCoreApplication.translate("MainWindow", u"Logistic Regression", None))
         self.comboBoxTypeModel.setItemText(2, QCoreApplication.translate("MainWindow", u"KNN", None))
         self.comboBoxTypeModel.setItemText(3, QCoreApplication.translate("MainWindow", u"Decision Tree", None))
+        self.comboBoxTypeModel.setItemText(4, QCoreApplication.translate("MainWindow", u"Random Forest", None))
 
         self.btnTrainModel.setText(QCoreApplication.translate("MainWindow", u"Train", None))
     # retranslateUi
