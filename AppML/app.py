@@ -534,7 +534,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif chart_type == "Box Plot":
             self.draw_box(x_column, self.df)
         elif chart_type == "Rug Plot":
-            self.draw_rug(x_column, self.df)
+            self.draw_rugplot(x_column, self.df)
 
     def draw_chart_2_value(self, x_column, y_column, chart_type):
         if chart_type == "Bar Chart":
