@@ -10,6 +10,7 @@ import seaborn as sns
 import numpy as np
 from ChartModel import ChartModel
 from matplotlib.ticker import FixedLocator
+from Recommend import get_recommendations
 
 ROW = 1
 COLUMN = 0
@@ -31,6 +32,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnClear.clicked.connect(self.on_click_clear_data)
         self.btnTrain.clicked.connect(self.on_click_train)
         self.btnChart.clicked.connect(self.on_click_chart)
+        self.btnRCM.clicked.connect(self.on_click_rcm)
 
         self.btnInfo.clicked.connect(self.check_info_data)
         self.btnNaN.clicked.connect(self.check_null_data)
@@ -44,6 +46,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnTrainModel.clicked.connect(self.on_click_train_model)
         self.btnToNumeric.clicked.connect(self.on_click_convert_numeric)
         self.btnShowChart.clicked.connect(self.on_click_show_chart)
+        self.btnReadFileRCM.clicked.connect(self.read_file_rcm)
+        self.btnRunRCM.clicked.connect(self.on_click_run_rcm)
 
         # check QButtonGroup have changed radio button selected
         self.btnGTypeVariable.buttonClicked.connect(self.set_chart_type_page)
@@ -117,6 +121,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.switch_page(3)
         self.load_page_train()
         self.reset_train_layout()
+
+    def on_click_rcm(self):
+        self.switch_page(4)
 
     def switch_page(self, index):
         self.stackedWidget.setCurrentIndex(index)
@@ -722,3 +729,42 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas = MplCanvas(
             self.widgetMatplotlib, width=5, height=4, dpi=100)
         self.plot_layout.addWidget(self.canvas)
+
+    def read_file_rcm(self):
+        file_name, _ = QFileDialog.getOpenFileName(
+            self.centralwidget, "Open CSV File", "", "CSV Files (*.csv)"
+        )
+
+        if file_name:
+            df = pd.read_csv(file_name, names=[
+                             'user_id', 'game', 'behavior', 'time', 'unknown'])
+            self.df_rcm = df
+            self.list_user_id_rcm = df['user_id'].unique().tolist()
+            name = file_name.split('/')[-1]
+            self.labelFileRCM.setText(name)
+            self.load_rcm_page()
+
+    def load_rcm_page(self):
+        if self.df_rcm is None:
+            return
+        self.comboBoxRCM.clear()
+
+        for user_id in self.list_user_id_rcm:
+            self.comboBoxRCM.addItem(str(user_id))
+
+    def on_click_run_rcm(self):
+        user_id = self.comboBoxRCM.currentText()
+        if user_id == '':
+            return
+        user_id = int(user_id)
+        top_n = self.lineEditRCM.text()
+        # check if top_n is an integer
+        if not top_n.isnumeric():
+            return
+        top_n = int(top_n)
+
+        recommend_games = get_recommendations(user_id, top_n, self.df_rcm)
+
+        self.listWidgetRCM.clear()
+        for game in recommend_games:
+            self.listWidgetRCM.addItem(game[0])

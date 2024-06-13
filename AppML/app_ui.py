@@ -17,10 +17,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QFrame,
     QGridLayout, QHBoxLayout, QHeaderView, QLabel,
-    QListWidget, QListWidgetItem, QMainWindow, QPushButton,
-    QRadioButton, QSizePolicy, QSpacerItem, QStackedWidget,
-    QTabWidget, QTableWidget, QTableWidgetItem, QTextBrowser,
-    QVBoxLayout, QWidget)
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
+    QPushButton, QRadioButton, QSizePolicy, QSpacerItem,
+    QStackedWidget, QTabWidget, QTableWidget, QTableWidgetItem,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -86,6 +86,11 @@ class Ui_MainWindow(object):
         self.btnTrain.setObjectName(u"btnTrain")
 
         self.verticalLayout_2.addWidget(self.btnTrain)
+
+        self.btnRCM = QPushButton(self.frame_4)
+        self.btnRCM.setObjectName(u"btnRCM")
+
+        self.verticalLayout_2.addWidget(self.btnRCM)
 
 
         self.verticalLayout_3.addWidget(self.frame_4)
@@ -604,6 +609,100 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.setStretch(0, 8)
         self.horizontalLayout_7.setStretch(1, 2)
         self.stackedWidget.addWidget(self.train_page)
+        self.rcm_page = QWidget()
+        self.rcm_page.setObjectName(u"rcm_page")
+        self.horizontalLayout_14 = QHBoxLayout(self.rcm_page)
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.frame_23 = QFrame(self.rcm_page)
+        self.frame_23.setObjectName(u"frame_23")
+        self.frame_23.setFrameShape(QFrame.StyledPanel)
+        self.frame_23.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_19 = QVBoxLayout(self.frame_23)
+        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.listWidgetRCM = QListWidget(self.frame_23)
+        self.listWidgetRCM.setObjectName(u"listWidgetRCM")
+
+        self.verticalLayout_19.addWidget(self.listWidgetRCM)
+
+
+        self.horizontalLayout_14.addWidget(self.frame_23)
+
+        self.frame_24 = QFrame(self.rcm_page)
+        self.frame_24.setObjectName(u"frame_24")
+        self.frame_24.setFrameShape(QFrame.StyledPanel)
+        self.frame_24.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_18 = QVBoxLayout(self.frame_24)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.frame_25 = QFrame(self.frame_24)
+        self.frame_25.setObjectName(u"frame_25")
+        self.frame_25.setFrameShape(QFrame.StyledPanel)
+        self.frame_25.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_17 = QVBoxLayout(self.frame_25)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
+        self.btnReadFileRCM = QPushButton(self.frame_25)
+        self.btnReadFileRCM.setObjectName(u"btnReadFileRCM")
+
+        self.verticalLayout_17.addWidget(self.btnReadFileRCM)
+
+        self.labelFileRCM = QLabel(self.frame_25)
+        self.labelFileRCM.setObjectName(u"labelFileRCM")
+
+        self.verticalLayout_17.addWidget(self.labelFileRCM, 0, Qt.AlignHCenter)
+
+
+        self.verticalLayout_18.addWidget(self.frame_25)
+
+        self.line_4 = QFrame(self.frame_24)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setFrameShape(QFrame.Shape.HLine)
+        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_18.addWidget(self.line_4)
+
+        self.label_15 = QLabel(self.frame_24)
+        self.label_15.setObjectName(u"label_15")
+
+        self.verticalLayout_18.addWidget(self.label_15)
+
+        self.comboBoxRCM = QComboBox(self.frame_24)
+        self.comboBoxRCM.setObjectName(u"comboBoxRCM")
+
+        self.verticalLayout_18.addWidget(self.comboBoxRCM)
+
+        self.frame_26 = QFrame(self.frame_24)
+        self.frame_26.setObjectName(u"frame_26")
+        self.frame_26.setFrameShape(QFrame.StyledPanel)
+        self.frame_26.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_15 = QHBoxLayout(self.frame_26)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.label_16 = QLabel(self.frame_26)
+        self.label_16.setObjectName(u"label_16")
+
+        self.horizontalLayout_15.addWidget(self.label_16)
+
+        self.lineEditRCM = QLineEdit(self.frame_26)
+        self.lineEditRCM.setObjectName(u"lineEditRCM")
+
+        self.horizontalLayout_15.addWidget(self.lineEditRCM)
+
+
+        self.verticalLayout_18.addWidget(self.frame_26)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 420, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_18.addItem(self.verticalSpacer_5)
+
+        self.btnRunRCM = QPushButton(self.frame_24)
+        self.btnRunRCM.setObjectName(u"btnRunRCM")
+
+        self.verticalLayout_18.addWidget(self.btnRunRCM)
+
+
+        self.horizontalLayout_14.addWidget(self.frame_24)
+
+        self.horizontalLayout_14.setStretch(0, 8)
+        self.horizontalLayout_14.setStretch(1, 2)
+        self.stackedWidget.addWidget(self.rcm_page)
 
         self.horizontalLayout_3.addWidget(self.stackedWidget)
 
@@ -620,7 +719,7 @@ class Ui_MainWindow(object):
         self.radioButton2Var.clicked.connect(self.frame_20.show)
         self.radioButtonVar.clicked.connect(self.frame_20.hide)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(4)
         self.tabWidget.setCurrentIndex(0)
 
 
@@ -635,6 +734,7 @@ class Ui_MainWindow(object):
         self.btnClear.setText(QCoreApplication.translate("MainWindow", u"Clear Data", None))
         self.btnChart.setText(QCoreApplication.translate("MainWindow", u"Chart", None))
         self.btnTrain.setText(QCoreApplication.translate("MainWindow", u"Training", None))
+        self.btnRCM.setText(QCoreApplication.translate("MainWindow", u"Recommend", None))
         self.btnSaveCSV.setText(QCoreApplication.translate("MainWindow", u"Save Data", None))
         self.btnQuit.setText(QCoreApplication.translate("MainWindow", u"Quit", None))
         self.textInfo.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -686,5 +786,10 @@ class Ui_MainWindow(object):
         self.comboBoxTypeModel.setItemText(4, QCoreApplication.translate("MainWindow", u"Random Forest", None))
 
         self.btnTrainModel.setText(QCoreApplication.translate("MainWindow", u"Train", None))
+        self.btnReadFileRCM.setText(QCoreApplication.translate("MainWindow", u"Read File", None))
+        self.labelFileRCM.setText(QCoreApplication.translate("MainWindow", u"No File", None))
+        self.label_15.setText(QCoreApplication.translate("MainWindow", u"Select Recommend", None))
+        self.label_16.setText(QCoreApplication.translate("MainWindow", u"quantity", None))
+        self.btnRunRCM.setText(QCoreApplication.translate("MainWindow", u"Run", None))
     # retranslateUi
 
